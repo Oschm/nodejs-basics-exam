@@ -1,53 +1,72 @@
 const fs = require("fs");
 
-
 // Function to read contacts from data.json
 function readContacts() {
   const data = fs.readFileSync("data.json", "utf8");
   return JSON.parse(data);
-
 }
 
 // Function to write contacts to data.json
 function writeContacts(contacts) {
   fs.writeFileSync("data.json", JSON.stringify(contacts, null, 2));
-
 }
 
-// Function to add a new contact
+/**
+ * Function to add a new contact and perform necessary checks before creating a new contact.
+ * @param {name} String The name of the contact.
+ * @param {phone} String The phone number of the contact. Checked by regexp. (TODO)
+ * @param {email} String The email address of the contact. Checked by regexp. (TODO)
+ */
 function addContact(name, phone, email) {
   // TODO: Implement this function
   //read contact file
   var contacts = readContacts();
-  //check email format
-  var validemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (validemail) {
-    console.log("valid email");
-  }
-  else { console.log("invalid email");
+
   //check if name exists
-  var nameExists = contacts.some((contact) => contact.name === name);
-  if (nameExists) {
-    console.log("User with name %s already exists.", name);
-    return;
+  var doesNameExist = contacts.some((contact) => contact.name === name);
+
+  //check email format
+  var validEmailExpression = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  var validPhoneNumberExpression = /^(\+\d{1,2}\s)??\d{3}?[\s.-]\d*/;
+
+  var isEmailValid = validEmailExpression.test(email);
+  var isPhoneNumberValid = validPhoneNumberExpression.test(phone);
+
+  if (isEmailValid && isPhoneNumberValid && !doesNameExist) {
+    console.log("valid email");
+    createContact(contacts, name, phone, email);
   } else {
-    // add a new contact
-    var contact = {
-      name: name,
-      phone_number: phone,
-      email: email,
-    };
-    const now = new Date();
-const currentDateTime = now.toLocaleString();
-console.log(currentDateTime);
-
-
-    contacts.push(contact);
-    writeContacts(contacts);
-  
-
+    if (!isEmailValid) {
+      console.log("invalid email");
+    } else if (!isPhoneNumberValid) {
+      console.log("invalid PhoneNumber");
+    } else if (doesNameExist) {
+      console.log("User with name %s already exists.", name);
+    }
   }
 }
+
+/**
+ * adds contact to contacts array and write to file
+ * @param {Array} contacts
+ * @param {String} name The name of the contact.
+ * @param {String} phone The phone number of the contact. Checked by regexp. (TODO)
+ * @param {String} email The email address of the contact. Checked by regexp.
+ */
+function createContact(contacts, name, phone, email) {
+  // add a new contact
+  var contact = {
+    name: name,
+    phone_number: phone,
+    email: email,
+  };
+  const now = new Date();
+  const currentDateTime = now.toLocaleString();
+  console.log(currentDateTime);
+  contact.creation_time = currentDateTime;
+
+  contacts.push(contact);
+  writeContacts(contacts);
 }
 
 // Function to remove a contact by name
@@ -91,28 +110,7 @@ function updateContact(name, newPhoneNumber, newEmail) {
       if (contacts[i].name === name) {
         contacts[i].phone_number = newPhoneNumber;
         contacts[i].email = newEmail;
-        break;
-      }
-    }
-    writeContacts(contacts);
-  }
-}
-function updateContact(name, newPhoneNumber, newEmail) {
-  // TODO: Implement this function
-  //readContacts
-  var contacts = readContacts();
-  //check if name exists
-  var userDoesExist = contacts.some((contact) => contact.name == name);
-  //if it doesnmt exist log statement
-  if (!userDoesExist) {
-    console.log("User cannot be updated because he doesn't exist.");
-  }
-  //if it exists overwrite email and phonenumber
-  else {
-    for (var i = 0; i < contacts.length; i++) {
-      if (contacts[i].name === name) {
-        contacts[i].phone_number = newPhoneNumber;
-        contacts[i].email = newEmail;
+        contacts[i].update_time = new Date().toLocaleString();
         break;
       }
     }
@@ -165,23 +163,18 @@ function viewContact(name) {
   }
 }
 
-
-  
-
-
 function runProgram() {
   // Sample usage
   //addContact('Alice', '123-456-7890', 'alice@example.com');
-  addContact("right Email", "098-765-4321", "asdasdasda");
+  //addContact("asdasdsadasad", "098-765-4321", "bob@example.com");
   //listContacts();
   //addContact("Bob", "098-765-4321", "bob@example.com");
   //addContact("Siratcha", "+66612954429", "siratcha.air@gmail.com");
   //viewContact('Alice');
-  //updateContact("Oliver", "111-222-3333", "alice@newdomain.com");
+  updateContact("Bob", "111-222-3333", "alice@newdomain.com");
   //viewContact("Oliver");
   //removeContact("Bob");
   //listContacts();
 }
 
 runProgram();
-
