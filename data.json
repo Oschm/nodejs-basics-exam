@@ -1,1 +1,22 @@
-[{"name": "Oliver Schmidt", "phone_number":"+49123456789", "email":"schmidt_ol@yahoo.de"}]
+[
+  {
+    "name": "Oliver",
+    "phone_number": "111-222-3333",
+    "email": "alice@newdomain.com"
+  },
+  {
+    "name": "Siratcha",
+    "phone_number": "+66612954429",
+    "email": "siratcha.air@gmail.com"
+  },
+  {
+    "name": "Bob",
+    "phone_number": "098-765-4321",
+    "email": "bob@example.com"
+  },
+  {
+    "name": "Wrong Email",
+    "phone_number": "098-765-4321",
+    "email": "asdasdasda"
+  }
+]

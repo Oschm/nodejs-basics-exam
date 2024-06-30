@@ -1,14 +1,17 @@
 const fs = require("fs");
 
+
 // Function to read contacts from data.json
 function readContacts() {
   const data = fs.readFileSync("data.json", "utf8");
   return JSON.parse(data);
+
 }
 
 // Function to write contacts to data.json
 function writeContacts(contacts) {
   fs.writeFileSync("data.json", JSON.stringify(contacts, null, 2));
+
 }
 
 // Function to add a new contact
@@ -59,6 +62,16 @@ function removeContact(name) {
   } else {
     writeContacts(filteredContacts);
   }
+  // TODO: Implement this function
+  //read contact file
+  var contacts = readContacts();
+  //check if name exists
+  var filteredContacts = contacts.filter((person) => person.name !== name);
+  if (filteredContacts.length === contacts.length) {
+    console.log("Name not found in contacts. Cant be removed");
+  } else {
+    writeContacts(filteredContacts);
+  }
 }
 
 // Function to update a contact by name
@@ -84,9 +97,43 @@ function updateContact(name, newPhoneNumber, newEmail) {
     writeContacts(contacts);
   }
 }
+function updateContact(name, newPhoneNumber, newEmail) {
+  // TODO: Implement this function
+  //readContacts
+  var contacts = readContacts();
+  //check if name exists
+  var userDoesExist = contacts.some((contact) => contact.name == name);
+  //if it doesnmt exist log statement
+  if (!userDoesExist) {
+    console.log("User cannot be updated because he doesn't exist.");
+  }
+  //if it exists overwrite email and phonenumber
+  else {
+    for (var i = 0; i < contacts.length; i++) {
+      if (contacts[i].name === name) {
+        contacts[i].phone_number = newPhoneNumber;
+        contacts[i].email = newEmail;
+        break;
+      }
+    }
+    writeContacts(contacts);
+  }
+}
 
 // Function to list all contacts
 function listContacts() {
+  //read contact file
+  var contacts = readContacts();
+  //loop over contacts
+  for (let i = 0; i < contacts.length; i++) {
+    //log contact
+    console.log(
+      "Name: %s, Phone number: %s, Email: %s",
+      contacts[i].name,
+      contacts[i].phone_number,
+      contacts[i].email
+    );
+  }
   //read contact file
   var contacts = readContacts();
   //loop over contacts
@@ -137,3 +184,4 @@ function runProgram() {
 }
 
 runProgram();
+
