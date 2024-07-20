@@ -11,6 +11,10 @@ function writeContacts(contacts) {
   fs.writeFileSync("data.json", JSON.stringify(contacts, null, 2));
 }
 
+function writeStringFileContent(fileName, fileContent) {
+  fs.writeFileSync(fileName, fileContent);
+}
+
 /**
  * Function to add a new contact and perform necessary checks before creating a new contact.
  * @param {name} String The name of the contact.
@@ -163,18 +167,34 @@ function viewContact(name) {
   }
 }
 
+function exportContactsToCsv(fileName, hasHeader) {
+  //read the file
+  var contacts = readContacts();
+  var fileContent = "";
+  //convert to excel syntax
+  for (var i = 0; i < contacts.length; i++) {
+    var contact = contacts[i];
+    fileContent +=
+      contact.name + ";" + contact.phone_number + ";" + contact.email + "\n";
+  }
+  //write the csv file
+  writeStringFileContent(fileName, fileContent);
+}
+
 function runProgram() {
   // Sample usage
   //addContact('Alice', '123-456-7890', 'alice@example.com');
   //addContact("asdasdsadasad", "098-765-4321", "bob@example.com");
   //listContacts();
   //addContact("Bob", "098-765-4321", "bob@example.com");
-  //addContact("Siratcha", "+66612954429", "siratcha.air@gmail.com");
+  //addContact("Siratcha", "098-765-4321", "siratcha.air@gmail.com");
   //viewContact('Alice');
-  updateContact("Bob", "111-222-3333", "alice@newdomain.com");
+  //updateContact("Bob", "111-222-3333", "alice@newdomain.com");
   //viewContact("Oliver");
   //removeContact("Bob");
   //listContacts();
+  exportContactsToCsv("contactsWithHeader.csv", true);
+  exportContactsToCsv("contactsWithoutHeader.csv", false);
 }
 
 runProgram();
