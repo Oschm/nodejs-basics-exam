@@ -167,15 +167,22 @@ function viewContact(name) {
   }
 }
 
-function exportContactsToCsv(fileName, hasHeader) {
+function exportContactsToCsv(fileName, hasHeader, delimiter) {
   //read the file
   var contacts = readContacts();
+  
   var fileContent = "";
+  //addheader
+  if (hasHeader){
+    fileContent += 
+    "Name"+delimiter+"Phone Number"+delimiter+"Email\n";
+  }
+
   //convert to excel syntax
   for (var i = 0; i < contacts.length; i++) {
     var contact = contacts[i];
     fileContent +=
-      contact.name + ";" + contact.phone_number + ";" + contact.email + "\n";
+      contact.name + delimiter + contact.phone_number + delimiter + contact.email + "\n";
   }
   //write the csv file
   writeStringFileContent(fileName, fileContent);
@@ -193,8 +200,37 @@ function runProgram() {
   //viewContact("Oliver");
   //removeContact("Bob");
   //listContacts();
-  exportContactsToCsv("contactsWithHeader.csv", true);
-  exportContactsToCsv("contactsWithoutHeader.csv", false);
+  //exportContactsToCsv("contactsWithHeader.csv", true,",");
+  //exportContactsToCsv("contactsWithoutHeader.csv", false,",");
 }
 
 runProgram();
+
+function createChristmasTree(rows) {
+  // Create the star at the top of the tree
+  let star = '';
+  for (let i = 0; i < rows - 1; i++) {
+      star +=' ';
+  }
+  star +='*';
+  
+  console.log(star);
+  
+  // Create the body of the tree with '0's
+  for (let i = 1; i < rows; i++) {
+      let row = '';
+      
+      // Add spaces before the '0's to center the tree
+      for (let j = 0; j < rows - i - 1; j++) {
+          row += ' ';
+      }
+      // body of the tree
+      for (let k = 0; k < 2 * i - 1; k++) {
+          row += '0';
+      }
+      console.log(row);
+  }
+}
+
+// Call the function 
+createChristmasTree(10);
