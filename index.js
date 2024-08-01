@@ -233,4 +233,32 @@ function createChristmasTree(rows) {
 }
 
 // Call the function 
-createChristmasTree(10);
+//createChristmasTree(10);
+
+const fs = require('fs');
+const parse = require('csv-parse');
+
+const filePath = '\air\list of hospitals .csv'; // Replace with your CSV file path
+
+fs.readFile(filePath, (err, data) => {
+  if (err) {
+    console.error('Error reading file:', err);
+    return;
+  }
+
+  parse(data, {
+    columns: false, // Set to false if you do not have headers
+    trim: true,
+    skip_empty_lines: true
+  }, (err, records) => {
+    if (err) {
+      console.error('Error parsing CSV:', err);
+      return;
+    }
+
+    // Assuming each row has a single column with the hospital name
+    const hospitalNames = records.map(row => row[0]);
+
+    console.log('Hospital Names:', hospitalNames);
+  });
+});
